@@ -37,7 +37,6 @@ final class CosmicRenderer: NSObject, MTKViewDelegate {
         autoreleasepool {
             var image = CIImage(cvPixelBuffer: pixelBuffer)
 
-            // Mirror (selfie view)
             image = image.transformed(by: CGAffineTransform(scaleX: -1, y: 1))
                          .transformed(by: CGAffineTransform(translationX: image.extent.width, y: 0))
 
@@ -45,16 +44,6 @@ final class CosmicRenderer: NSObject, MTKViewDelegate {
             let effects = EffectsEngine.shared
 
             if effects.objectVisible {
-                let cx = (1 - effects.objectCenter.x) * extent.width
-                let cy = effects.objectCenter.y * extent.height
-
-                let bump = CIFilter.bumpDistortion()
-                bump.inputImage = image
-                bump.center = CGPoint(x: cx, y: cy)
-                bump.radius = Float(260 * effects.objectScale)
-                bump.scale = 0.35
-                image = bump.outputImage ?? image
-
                 let vignette = CIFilter.vignette()
                 vignette.inputImage = image
                 vignette.intensity = 0.9

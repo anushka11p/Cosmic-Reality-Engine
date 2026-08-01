@@ -13,7 +13,7 @@ final class EffectsEngine: ObservableObject {
 
     @Published var bigBangActive: Bool = false
     @Published var bigBangTrigger: Bool = false
-
+    
     private var rotationVelocityXW: Double = 0
     private var rotationVelocityYZ: Double = 0
 
@@ -88,9 +88,13 @@ final class EffectsEngine: ObservableObject {
 
         lastDistance = distance
         objectVisible = true
+        
     }
+    
+    
 
     private func triggerBigBang() {
+        
         lastBigBangTime = Date()
         bigBangActive = true
         bigBangTrigger.toggle()

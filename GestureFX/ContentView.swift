@@ -50,7 +50,10 @@ struct ContentView: View {
             }
             .padding()
         }
-        .onAppear { camera.start() }
+        .onAppear {
+            camera.start()
+            SoundEngine.shared.loadSound(named: "Dimensional_Drift")
+        }
         .frame(minWidth: 900, minHeight: 650)
     }
 }

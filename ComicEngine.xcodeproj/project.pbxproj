@@ -78,7 +78,7 @@
 					};
 				};
 			};
-			buildConfigurationList = F1F7C63F301624A80026A13C /* Build configuration list for PBXProject "GestureSing" */;
+			buildConfigurationList = F1F7C63F301624A80026A13C /* Build configuration list for PBXProject "ComicEngine" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -328,7 +328,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		F1F7C63F301624A80026A13C /* Build configuration list for PBXProject "GestureSing" */ = {
+		F1F7C63F301624A80026A13C /* Build configuration list for PBXProject "ComicEngine" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F1F7C64D301624AA0026A13C /* Debug */,

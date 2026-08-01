@@ -10,7 +10,9 @@ The project combines Apple's Vision framework, Metal, Core Image, and SwiftUI to
 
 ### The App in Action
 
-> Add screenshot here
+<img width="800" height="800" alt="Screenshot 2026-08-02 at 12 38 09 AM" src="https://github.com/user-attachments/assets/55728394-56a0-432c-b546-7a8133f64f54" />
+
+
 
 ```
 /assets/screenshots/app.png
@@ -20,7 +22,8 @@ The project combines Apple's Vision framework, Metal, Core Image, and SwiftUI to
 
 ### Big Bang Event
 
-> Add screenshot here
+<img width="800" height="800" alt="Screenshot 2026-08-02 at 12 39 07 AM" src="https://github.com/user-attachments/assets/40977cf9-2687-42df-8b12-5647b8d62340" />
+
 
 ```
 /assets/screenshots/bigbang.png
@@ -215,9 +218,6 @@ This project is licensed under the MIT License.
 
 **Anushka Prasad**
 
-GitHub: [https://github.com/yourusername](https://github.com/yourusername)
-
-LinkedIn: [https://linkedin.com/in/yourprofile](https://linkedin.com/in/yourprofile)
 
 ---
 

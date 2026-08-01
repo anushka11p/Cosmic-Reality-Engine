@@ -1,7 +1,7 @@
 import SwiftUI
 
 @main
-struct GestureSingApp: App {
+struct ComicEngineApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()

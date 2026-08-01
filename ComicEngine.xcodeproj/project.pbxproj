@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXFileReference section */
-		F188F34030190F2E00D7B94E /* GestureSing.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GestureSing.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F188F34030190F2E00D7B94E /* CosmicEngine.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CosmicEngine.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -33,16 +33,16 @@
 			isa = PBXGroup;
 			children = (
 				F188F31C3019073F00D7B94E /* GestureFX */,
-				F188F34030190F2E00D7B94E /* GestureSing.app */,
+				F188F34030190F2E00D7B94E /* CosmicEngine.app */,
 			);
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		F1F7C643301624A80026A13C /* GestureSing */ = {
+		F1F7C643301624A80026A13C /* CosmicEngine */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = F1F7C64F301624AA0026A13C /* Build configuration list for PBXNativeTarget "GestureSing" */;
+			buildConfigurationList = F1F7C64F301624AA0026A13C /* Build configuration list for PBXNativeTarget "CosmicEngine" */;
 			buildPhases = (
 				F1F7C640301624A80026A13C /* Sources */,
 				F1F7C641301624A80026A13C /* Frameworks */,
@@ -55,11 +55,11 @@
 			fileSystemSynchronizedGroups = (
 				F188F31C3019073F00D7B94E /* GestureFX */,
 			);
-			name = GestureSing;
+			name = CosmicEngine;
 			packageProductDependencies = (
 			);
 			productName = GestureSing;
-			productReference = F188F34030190F2E00D7B94E /* GestureSing.app */;
+			productReference = F188F34030190F2E00D7B94E /* CosmicEngine.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -92,7 +92,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				F1F7C643301624A80026A13C /* GestureSing */,
+				F1F7C643301624A80026A13C /* CosmicEngine */,
 			);
 		};
 /* End PBXProject section */
@@ -268,7 +268,7 @@
 				);
 				MARKETING_VERSION = 1.0;
 				NEW_SETTING = "";
-				PRODUCT_BUNDLE_IDENTIFIER = Anushka.GestureSing;
+				PRODUCT_BUNDLE_IDENTIFIER = Anushka.CosmicEngine;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -313,7 +313,7 @@
 				);
 				MARKETING_VERSION = 1.0;
 				NEW_SETTING = "";
-				PRODUCT_BUNDLE_IDENTIFIER = Anushka.GestureSing;
+				PRODUCT_BUNDLE_IDENTIFIER = Anushka.CosmicEngine;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -337,7 +337,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		F1F7C64F301624AA0026A13C /* Build configuration list for PBXNativeTarget "GestureSing" */ = {
+		F1F7C64F301624AA0026A13C /* Build configuration list for PBXNativeTarget "CosmicEngine" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F1F7C650301624AA0026A13C /* Debug */,

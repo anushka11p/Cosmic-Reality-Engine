@@ -1,79 +1,305 @@
 import Vision
 import CoreGraphics
 
-func angleAt(_ pip: CGPoint, _ mcp: CGPoint, _ tip: CGPoint) -> CGFloat {
-    let v1 = CGPoint(x: mcp.x - pip.x, y: mcp.y - pip.y)
-    let v2 = CGPoint(x: tip.x - pip.x, y: tip.y - pip.y)
-    let dot = v1.x * v2.x + v1.y * v2.y
-    let mag1 = hypot(v1.x, v1.y), mag2 = hypot(v2.x, v2.y)
-    guard mag1 > 0, mag2 > 0 else { return 0 }
-    let cosAngle = max(-1, min(1, dot / (mag1 * mag2)))
-    return acos(cosAngle) * 180 / .pi
+func angleAt(
+    _ pip: CGPoint,
+    _ mcp: CGPoint,
+    _ tip: CGPoint
+) -> CGFloat {
+    let firstVector = CGPoint(
+        x: mcp.x - pip.x,
+        y: mcp.y - pip.y
+    )
+
+    let secondVector = CGPoint(
+        x: tip.x - pip.x,
+        y: tip.y - pip.y
+    )
+
+    let dot =
+        firstVector.x * secondVector.x +
+        firstVector.y * secondVector.y
+
+    let firstMagnitude = hypot(
+        firstVector.x,
+        firstVector.y
+    )
+
+    let secondMagnitude = hypot(
+        secondVector.x,
+        secondVector.y
+    )
+
+    guard
+        firstMagnitude > 0,
+        secondMagnitude > 0
+    else {
+        return 0
+    }
+
+    let cosine = max(
+        -1,
+        min(
+            1,
+            dot /
+            (firstMagnitude * secondMagnitude)
+        )
+    )
+
+    return acos(cosine) * 180 / .pi
 }
 
 struct FingerStates {
-    let thumb, index, middle, ring, pinky: Bool
+    let thumb: Bool
+    let index: Bool
+    let middle: Bool
+    let ring: Bool
+    let pinky: Bool
 }
 
-func fingerStates(from obs: VNHumanHandPoseObservation) throws -> FingerStates {
-    let T: CGFloat = 155
-    let ringT: CGFloat = 130
-    let pinkyT: CGFloat = 140
+func fingerStates(
+    from observation: VNHumanHandPoseObservation
+) throws -> FingerStates {
+    let straightThreshold: CGFloat = 155
+    let ringThreshold: CGFloat = 130
+    let pinkyThreshold: CGFloat = 140
 
-    func pt(_ joint: VNHumanHandPoseObservation.JointName) -> CGPoint {
-        (try? obs.recognizedPoint(joint))?.location ?? .zero
+    func point(
+        _ joint: VNHumanHandPoseObservation.JointName
+    ) -> CGPoint {
+        (try? observation.recognizedPoint(joint))?
+            .location ?? .zero
     }
 
-    let index  = angleAt(pt(.indexPIP),  pt(.indexMCP),  pt(.indexTip))  >= T
-    let middle = angleAt(pt(.middlePIP), pt(.middleMCP), pt(.middleTip)) >= T
-    let ring   = angleAt(pt(.ringPIP),   pt(.ringMCP),   pt(.ringTip))   >= ringT
-    let pinky  = angleAt(pt(.littlePIP), pt(.littleMCP), pt(.littleTip)) >= pinkyT
+    let index = angleAt(
+        point(.indexPIP),
+        point(.indexMCP),
+        point(.indexTip)
+    ) >= straightThreshold
 
-    let thumbTip = pt(.thumbTip), thumbMcp = pt(.thumbCMC), indexMcp = pt(.indexMCP)
-    let tipDist = hypot(thumbTip.x - indexMcp.x, thumbTip.y - indexMcp.y)
-    let mcpDist = hypot(thumbMcp.x - indexMcp.x, thumbMcp.y - indexMcp.y)
-    let thumb = mcpDist > 0 && (tipDist / mcpDist) > 1.2
+    let middle = angleAt(
+        point(.middlePIP),
+        point(.middleMCP),
+        point(.middleTip)
+    ) >= straightThreshold
 
-    return FingerStates(thumb: thumb, index: index, middle: middle, ring: ring, pinky: pinky)
+    let ring = angleAt(
+        point(.ringPIP),
+        point(.ringMCP),
+        point(.ringTip)
+    ) >= ringThreshold
+
+    let pinky = angleAt(
+        point(.littlePIP),
+        point(.littleMCP),
+        point(.littleTip)
+    ) >= pinkyThreshold
+
+    let thumbTip = point(.thumbTip)
+    let thumbCMC = point(.thumbCMC)
+    let indexMCP = point(.indexMCP)
+
+    let tipDistance = hypot(
+        thumbTip.x - indexMCP.x,
+        thumbTip.y - indexMCP.y
+    )
+
+    let baseDistance = hypot(
+        thumbCMC.x - indexMCP.x,
+        thumbCMC.y - indexMCP.y
+    )
+
+    let thumb =
+        baseDistance > 0 &&
+        (tipDistance / baseDistance) > 1.2
+
+    return FingerStates(
+        thumb: thumb,
+        index: index,
+        middle: middle,
+        ring: ring,
+        pinky: pinky
+    )
 }
 
-func classifyGesture(_ f: FingerStates) -> String {
-    let count = [f.thumb, f.index, f.middle, f.ring, f.pinky].filter { $0 }.count
+func classifyGesture(
+    _ states: FingerStates
+) -> String {
+    let extendedCount = [
+        states.thumb,
+        states.index,
+        states.middle,
+        states.ring,
+        states.pinky
+    ]
+    .filter { $0 }
+    .count
 
-    if count == 0 { return "FIST" }
-    if count == 5 { return "OPEN" }
-
-    if f.index && f.middle && f.ring && !f.pinky && !f.thumb { return "INDEX_MIDDLE_RING" }
-    if f.index && f.middle && !f.ring && !f.pinky && !f.thumb { return "INDEX_MIDDLE" }
-
-    if count == 1 {
-        if f.thumb  { return "THUMB" }
-        if f.index  { return "INDEX" }
-        if f.middle { return "MIDDLE" }
-        if f.ring   { return "RING" }
-        if f.pinky  { return "PINKY" }
+    if extendedCount == 0 {
+        return "FIST"
     }
+
+    if extendedCount == 5 {
+        return "OPEN"
+    }
+
+    if
+        states.index,
+        states.middle,
+        states.ring,
+        !states.pinky,
+        !states.thumb
+    {
+        return "INDEX_MIDDLE_RING"
+    }
+
+    if
+        states.index,
+        states.middle,
+        !states.ring,
+        !states.pinky,
+        !states.thumb
+    {
+        return "INDEX_MIDDLE"
+    }
+
+    if extendedCount == 1 {
+        if states.thumb {
+            return "THUMB"
+        }
+
+        if states.index {
+            return "INDEX"
+        }
+
+        if states.middle {
+            return "MIDDLE"
+        }
+
+        if states.ring {
+            return "RING"
+        }
+
+        if states.pinky {
+            return "PINKY"
+        }
+    }
+
     return "AMBIGUOUS"
 }
 
 struct TrackedHand {
-    let landmarks: [VNHumanHandPoseObservation.JointName: CGPoint]
+    let landmarks: [
+        VNHumanHandPoseObservation.JointName: CGPoint
+    ]
+
     let center: CGPoint
+    let wrist: CGPoint
     let gesture: String
 }
 
-func extractTrackedHand(from observation: VNHumanHandPoseObservation) -> TrackedHand? {
-    guard let all = try? observation.recognizedPoints(.all) else { return nil }
-    var points: [VNHumanHandPoseObservation.JointName: CGPoint] = [:]
-    for (name, point) in all where point.confidence > 0.3 {
-        points[name] = point.location
+func extractTrackedHand(
+    from observation: VNHumanHandPoseObservation
+) -> TrackedHand? {
+    guard
+        let recognizedPoints =
+            try? observation.recognizedPoints(.all)
+    else {
+        return nil
     }
-    guard let wrist = points[.wrist] else { return nil }
 
-    var gesture = "NONE"
-    if let states = try? fingerStates(from: observation) {
+    var landmarks: [
+        VNHumanHandPoseObservation.JointName: CGPoint
+    ] = [:]
+
+    for (jointName, recognizedPoint) in recognizedPoints
+    where recognizedPoint.confidence > 0.3 {
+        landmarks[jointName] =
+            recognizedPoint.location
+    }
+
+    guard let wrist = landmarks[.wrist] else {
+        return nil
+    }
+
+    let center = calculatePalmCenter(
+        landmarks: landmarks,
+        fallback: wrist
+    )
+
+    let gesture: String
+
+    if let states = try? fingerStates(
+        from: observation
+    ) {
         gesture = classifyGesture(states)
+    } else {
+        gesture = "NONE"
     }
 
-    return TrackedHand(landmarks: points, center: wrist, gesture: gesture)
+    return TrackedHand(
+        landmarks: landmarks,
+        center: center,
+        wrist: wrist,
+        gesture: gesture
+    )
+}
+
+private func calculatePalmCenter(
+    landmarks: [
+        VNHumanHandPoseObservation.JointName: CGPoint
+    ],
+    fallback: CGPoint
+) -> CGPoint {
+    let preferredJoints: [
+        VNHumanHandPoseObservation.JointName
+    ] = [
+        .wrist,
+        .thumbCMC,
+        .indexMCP,
+        .middleMCP,
+        .ringMCP,
+        .littleMCP
+    ]
+
+    let availablePoints = preferredJoints.compactMap {
+        landmarks[$0]
+    }
+
+    guard !availablePoints.isEmpty else {
+        return fallback
+    }
+
+    let total = availablePoints.reduce(
+        CGPoint.zero
+    ) { partialResult, point in
+        CGPoint(
+            x: partialResult.x + point.x,
+            y: partialResult.y + point.y
+        )
+    }
+
+    let count = CGFloat(
+        availablePoints.count
+    )
+
+    let averagedCenter = CGPoint(
+        x: total.x / count,
+        y: total.y / count
+    )
+
+    // Slight bias toward the finger bases so the object sits
+    // inside the palm opening rather than too close to the wrist.
+    if let middleMCP = landmarks[.middleMCP] {
+        return CGPoint(
+            x:
+                averagedCenter.x * 0.65 +
+                middleMCP.x * 0.35,
+            y:
+                averagedCenter.y * 0.65 +
+                middleMCP.y * 0.35
+        )
+    }
+
+    return averagedCenter
 }

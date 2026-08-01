@@ -1,59 +1,119 @@
 import SwiftUI
 
 struct ContentView: View {
-    @StateObject var camera = CosmicCameraController.shared
-    @ObservedObject var effects = EffectsEngine.shared
+
+    @ObservedObject private var effects =
+        EffectsEngine.shared
 
     var body: some View {
         ZStack {
             CosmicMetalView()
                 .ignoresSafeArea()
 
-            StarField(center: effects.objectCenter, pullStrength: 0)
-                .opacity(0.5)
+            spaceDarkeningOverlay
+
+            StarfieldBackground()
+
+            CosmicDimensionView()
                 .ignoresSafeArea()
 
             HandSkeletonOverlay()
                 .ignoresSafeArea()
 
-            CosmicDimensionView()
-                .ignoresSafeArea()
-
             BigBangEffect()
                 .ignoresSafeArea()
-
-            VStack {
-                HStack {
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text("Cosmic Reality Engine")
-                            .font(.system(size: 14, weight: .semibold, design: .monospaced))
-                        Text(effects.objectVisible ? "Object: Active" : "Show both palms to summon")
-                            .font(.system(size: 12, design: .monospaced))
-                            .foregroundColor(.gray)
-                    }
-                    .padding(10)
-                    .background(.black.opacity(0.4))
-                    .cornerRadius(8)
-                    .foregroundColor(.white)
-                    Spacer()
-                }
-                Spacer()
-                HStack {
-                    Text("Two palms: summon  •  Rotate: spin  •  Distance: scale  •  Clap fast: Big Bang")
-                        .font(.system(size: 11, design: .monospaced))
-                        .foregroundColor(.gray)
-                        .padding(8)
-                        .background(.black.opacity(0.4))
-                        .cornerRadius(6)
-                    Spacer()
-                }
-            }
-            .padding()
         }
+        .background(Color.black)
+        .ignoresSafeArea()
+        .frame(
+            minWidth: 900,
+            minHeight: 650
+        )
         .onAppear {
-            camera.start()
-            SoundEngine.shared.loadSound(named: "Dimensional_Drift")
+            CosmicCameraController.shared.start()
+
+            SoundEngine.shared.loadSound(
+                named: "Dimensional_Drift"
+            )
         }
-        .frame(minWidth: 900, minHeight: 650)
+        .onDisappear {
+            CosmicCameraController.shared.stop()
+        }
+    }
+
+    private var spaceDarkeningOverlay: some View {
+        ZStack {
+            Color.black
+                .opacity(
+                    effects.objectVisible
+                    ? 0.42
+                    : 0
+                )
+
+            LinearGradient(
+                colors: [
+                    Color(
+                        red: 0.01,
+                        green: 0.02,
+                        blue: 0.10
+                    )
+                    .opacity(
+                        effects.objectVisible
+                        ? 0.34
+                        : 0
+                    ),
+
+                    Color.black.opacity(
+                        effects.objectVisible
+                        ? 0.18
+                        : 0
+                    ),
+
+                    Color(
+                        red: 0.02,
+                        green: 0.01,
+                        blue: 0.09
+                    )
+                    .opacity(
+                        effects.objectVisible
+                        ? 0.30
+                        : 0
+                    )
+                ],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+
+            RadialGradient(
+                colors: [
+                    Color.clear,
+
+                    Color.black.opacity(
+                        effects.objectVisible
+                        ? 0.18
+                        : 0
+                    ),
+
+                    Color.black.opacity(
+                        effects.objectVisible
+                        ? 0.60
+                        : 0
+                    )
+                ],
+                center: UnitPoint(
+                    x: effects.objectCenter.x,
+                    y: 1 -
+                        effects.objectCenter.y
+                ),
+                startRadius: 130,
+                endRadius: 900
+            )
+        }
+        .animation(
+            .easeInOut(duration: 0.9),
+            value: effects.objectVisible
+        )
+        .allowsHitTesting(false)
+        .ignoresSafeArea()
     }
 }

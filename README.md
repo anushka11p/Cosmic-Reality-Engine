@@ -49,21 +49,6 @@ The project combines Apple's Vision framework, Metal, Core Image, and SwiftUI to
 
 ---
 
-## Demo
-
-Add a GIF or demo video here.
-
-```
-demo/demo.gif
-```
-
-or
-
-```
-demo/demo.mp4
-```
-
----
 
 ## How It Works
 

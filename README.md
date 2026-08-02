@@ -216,7 +216,5 @@ assets/
         app.png
         bigbang.png
 
-demo/
-    demo.gif
 ```
 

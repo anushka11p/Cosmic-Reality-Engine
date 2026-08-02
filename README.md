@@ -220,4 +220,3 @@ demo/
     demo.gif
 ```
 
-A small suggestion: if you're planning to showcase this on GitHub or include it in internship applications, record a **10–15 second GIF** showing the complete sequence—normal room → hands appear → tesseract summons → rotate → scale → clap → Big Bang. A single looping GIF at the top of the README will make a much stronger first impression than several static screenshots.
